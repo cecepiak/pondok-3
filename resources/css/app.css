@@ -1,0 +1,32 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Notifikasi badge di footer */
+.footer-nav .nav-item .notification-badge {
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 8px;
+    height: 8px;
+    background-color: #ef4444;
+    border-radius: 50%;
+    z-index: 10;
+}
+
+/* Jika ingin badge berbentuk lingkaran dengan angka */
+.footer-nav .nav-item .notification-badge-number {
+    position: absolute;
+    top: -2px;
+    right: -2px;
+    min-width: 16px;
+    height: 16px;
+    background-color: #ef4444;
+    color: white;
+    font-size: 10px;
+    font-weight: bold;
+    text-align: center;
+    line-height: 16px;
+    border-radius: 8px;
+    z-index: 10;
+}

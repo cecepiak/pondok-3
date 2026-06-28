@@ -1,0 +1,140 @@
+<?php
+
+namespace App\Livewire;
+
+use Livewire\Component;
+use Livewire\WithFileUploads; // Penting untuk Lampiran/Upload
+
+class DataMigrationForm extends Component
+{
+    use WithFileUploads;
+
+    // --- State Properties (Data Formulir) ---
+    public $currentStep = 1;
+    public $setuju = false; // Langkah 1
+    
+    // Langkah 2: Formulir
+    public $nik_pemohon;
+    public $kk_pemohon;
+    public $skpwni;
+    public $nama_lengkap;
+    public $whatsapp;
+    public $telepon;
+    public $email;
+    public $numpang_kk; // Pilihan KK Mandiri/Numpang
+    public $captcha;
+    public $captcha_input;
+
+    // Langkah 3: Lampiran (Gunakan temporary URL untuk Livewire)
+    public $lampiran_skpwni;
+    public $lampiran_kk_ktp_asal;
+    public $lampiran_pernyataan_tinggal;
+    public $lampiran_form_perubahan_data;
+    public $lampiran_bukti_perubahan_data;
+    public $lampiran_foto_buku_nikah;
+    public $foto_selfie;
+    public $tanda_tangan; // Mungkin berupa file gambar tanda tangan
+
+    // --- Aturan Validasi ---
+    protected $rules = [
+        // STEP 2: Formulir
+        'nik_pemohon' => 'required|digits:16',
+        'kk_pemohon' => 'required|digits:16',
+        'skpwni' => 'required|string|max:20',
+        'nama_lengkap' => 'required|string|max:100',
+        'whatsapp' => 'required|digits_between:10,15',
+        'telepon' => 'required|digits_between:10,15',
+        'email' => 'required|email|max:100',
+        'numpang_kk' => 'required|in:KK Mandiri,Numpang KK',
+
+        // STEP 3: Lampiran
+        'lampiran_skpwni' => 'nullable|file|mimes:pdf,jpg,jpeg,png|max:5120', // Max 5MB
+        'lampiran_kk_ktp_asal' => 'nullable|file|mimes:pdf,jpg,jpeg,png|max:5120',
+        'foto_selfie' => 'nullable|image|max:2048', // Max 2MB
+        // ... tambahkan aturan untuk lampiran lainnya
+    ];
+
+    // Inisialisasi Captcha saat pertama kali load
+    public function mount()
+    {
+        $this->generateCaptcha();
+    }
+
+    // --- Navigasi dan Validasi ---
+    public function nextStep()
+    {
+        switch ($this->currentStep) {
+            case 1:
+                if (!$this->setuju) {
+                    session()->flash('error', 'Anda harus menyetujui pernyataan persetujuan.');
+                    return;
+                }
+                $this->currentStep++;
+                break;
+            case 2:
+                // Validasi data Formulir
+                $this->validate([
+                    'nik_pemohon' => $this->rules['nik_pemohon'],
+                    'skpwni' => $this->rules['skpwni'],
+                    // ... tambahkan semua field Langkah 2
+                ]);
+                
+                // Cek Captcha
+                if ($this->captcha_input !== $this->captcha) {
+                    session()->flash('error', 'Kode Captcha tidak sesuai.');
+                    $this->generateCaptcha(); // Refresh captcha
+                    return;
+                }
+
+                $this->currentStep++;
+                break;
+            case 3:
+                // Validasi data Lampiran
+                $this->validate([
+                    'lampiran_skpwni' => $this->rules['lampiran_skpwni'],
+                    // ... tambahkan semua field Langkah 3 yang 'required'
+                ]);
+                
+                $this->currentStep++; // Pratinjau
+                break;
+        }
+    }
+
+    public function prevStep()
+    {
+        $this->currentStep--;
+    }
+
+    public function submitForm()
+    {
+        // Validasi final (jika diperlukan)
+
+        // 1. Pindahkan file upload dari temporary ke disk permanen
+        // Contoh:
+        // $path = $this->foto_selfie->store('uploads/selfie', 'public');
+        
+        // 2. Simpan data formulir dan path file ke database
+        // DataMigration::create([
+        //     'nik' => $this->nik_pemohon,
+        //     'selfie_path' => $path,
+        //     // ... data lainnya
+        // ]);
+        
+        // 3. Reset form dan tampilkan pesan sukses
+        session()->flash('success', 'Pengajuan Pindah Datang berhasil diajukan!');
+        $this->reset(); // Reset semua properti
+        $this->currentStep = 1;
+    }
+
+    // Helper untuk membuat Captcha sederhana
+    public function generateCaptcha()
+    {
+        $this->captcha = substr(str_shuffle("0123456789abcdefghijklmnopqrstuvwxyz"), 0, 5);
+        $this->captcha_input = ''; // Reset input
+    }
+    
+    public function render()
+    {
+        return view('livewire.data-migration-form');
+    }
+}

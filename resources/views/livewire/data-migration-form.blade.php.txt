@@ -1,0 +1,133 @@
+<div class="container" x-data>
+    <form wire:submit.prevent="{{ $currentStep == 4 ? 'submitForm' : 'nextStep' }}">
+        
+        <div class="flex justify-between mb-8">
+            <x-step-indicator :currentStep="$currentStep" :step="1" title="Perhatian" />
+            <x-step-indicator :currentStep="$currentStep" :step="2" title="Formulir" />
+            <x-step-indicator :currentStep="$currentStep" :step="3" title="Lampiran" />
+            <x-step-indicator :currentStep="$currentStep" :step="4" title="Pratinjau" />
+        </div>
+        
+        @if (session()->has('error'))
+            <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative mb-4" role="alert">
+                {{ session('error') }}
+            </div>
+        @endif
+
+        @if ($currentStep == 1)
+            <div class="p-6 bg-white shadow rounded">
+                <h2 class="text-xl font-semibold mb-4">Perhatian !!</h2>
+                <p>..."Barang siapa dengan sengaja melakukan pemalsuan identitas diri atau dokumen..."</p>
+                <ul class="list-disc ml-5 mt-4">
+                    <li>Pastikan Anda sudah memiliki Surat Pindah (SKPWNI)...</li>
+                    <li>Pastikan Anda sudah membaca dan memahami Syarat & Ketentuan...</li>
+                    </ul>
+
+                <div class="mt-8 border p-4 rounded bg-gray-50">
+                    <label class="flex items-center space-x-3">
+                        <input type="checkbox" wire:model.live="setuju" class="form-checkbox h-5 w-5 text-indigo-600">
+                        <span class="text-gray-900">
+                            **Pernyataan Persetujuan**
+                            Saya memahami, menyetujui, dan akan mengikuti aturan yang berlaku...
+                        </span>
+                    </label>
+                </div>
+            </div>
+        @endif
+
+        @if ($currentStep == 2)
+            <div class="p-6 bg-white shadow rounded grid grid-cols-2 gap-6">
+                <x-input-field label="NIK Pemohon*" type="text" wire:model="nik_pemohon" />
+                <x-input-field label="KK Pemohon*" type="text" wire:model="kk_pemohon" />
+                
+                <x-input-field label="Nomor SKPWNI*" type="text" wire:model="skpwni" />
+                <x-input-field label="Nama Lengkap*" type="text" wire:model="nama_lengkap" />
+
+                <x-input-field label="WhatsApp*" type="text" wire:model="whatsapp" />
+                <x-input-field label="Telepon*" type="text" wire:model="telepon" />
+                <x-input-field label="Email*" type="email" wire:model="email" />
+                
+                <div>
+                    <label class="block text-sm font-medium text-gray-700">Numpang KK ?*</label>
+                    <select wire:model="numpang_kk" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm">
+                        <option value="">Pilih salah satu</option>
+                        <option value="KK Mandiri">KK Mandiri</option>
+                        <option value="Numpang KK">Numpang KK</option>
+                    </select>
+                    @error('numpang_kk') <span class="text-red-500 text-xs">{{ $message }}</span> @enderror
+                </div>
+                
+                <div class="col-span-2">
+                    <label class="block text-sm font-medium text-gray-700">Captcha*</label>
+                    <div class="flex items-center mt-1">
+                        <span class="p-2 bg-gray-200 font-mono text-lg rounded mr-2">{{ $captcha }}</span>
+                        <input type="text" wire:model="captcha_input" class="rounded-md border-gray-300 shadow-sm flex-grow">
+                        <button type="button" wire:click="generateCaptcha" class="ml-2 p-2 text-indigo-600 hover:text-indigo-900" title="Refresh Captcha">
+                             🔄
+                        </button>
+                    </div>
+                    @error('captcha_input') <span class="text-red-500 text-xs">{{ $message }}</span> @enderror
+                </div>
+            </div>
+        @endif
+
+        @if ($currentStep == 3)
+            <div class="p-6 bg-white shadow rounded grid grid-cols-2 gap-6">
+                <x-file-upload-field label="Lampiran SKPWNI*" wire:model="lampiran_skpwni" />
+                <x-file-upload-field label="Lampiran KK dan KTP Asal Pemohon*" wire:model="lampiran_kk_ktp_asal" />
+                <div class="col-span-2">
+                    <x-file-upload-field label="Foto Selfie*" wire:model="foto_selfie" type="image" />
+                    @if ($foto_selfie)
+                        <p class="mt-2">Pratinjau:</p>
+                        <img src="{{ $foto_selfie->temporaryUrl() }}" class="h-32 w-32 object-cover rounded shadow">                     @endif
+                </div>
+
+            </div>
+        @endif
+
+        @if ($currentStep == 4)
+            <div class="p-6 bg-white shadow rounded">
+                <h2 class="text-xl font-semibold mb-4">Pratinjau Data Pengajuan</h2>
+                <div class="grid grid-cols-2 gap-4">
+                    <p><strong>NIK Pemohon:</strong> {{ $nik_pemohon }}</p>
+                    <p><strong>Nama Lengkap:</strong> {{ $nama_lengkap }}</p>
+                    <p><strong>Email:</strong> {{ $email }}</p>
+                    <p><strong>Pilihan KK:</strong> {{ $numpang_kk }}</p>
+                    </div>
+
+                <h3 class="text-lg font-semibold mt-6 mb-2">Status Lampiran</h3>
+                <ul class="list-disc ml-5">
+                    <li>Lampiran SKPWNI: {{ $lampiran_skpwni ? 'TERUPLOAD' : 'BELUM' }}</li>
+                    <li>Foto Selfie: {{ $foto_selfie ? 'TERUPLOAD' : 'BELUM' }}</li>
+                    </ul>
+                
+                <p class="mt-6 text-red-600">Pastikan semua data sudah benar sebelum menekan tombol **Ajukan Permohonan**.</p>
+            </div>
+        @endif
+
+        <div class="flex justify-between mt-8">
+            @if ($currentStep > 1)
+                <button type="button" wire:click="prevStep" class="px-4 py-2 bg-gray-500 text-white rounded hover:bg-gray-600">
+                    Sebelumnya
+                </button>
+            @else
+                <div></div> @endif
+
+            @if ($currentStep < 4)
+                <button type="submit" class="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700">
+                    Selanjutnya
+                </button>
+            @elseif ($currentStep == 4)
+                <button type="submit" class="px-4 py-2 bg-green-600 text-white rounded hover:bg-green-700">
+                    Ajukan Permohonan
+                </button>
+            @endif
+        </div>
+    </form>
+
+    @if (session()->has('success'))
+        <div class="fixed top-4 right-4 bg-green-500 text-white p-4 rounded shadow-lg">
+            {{ session('success') }}
+        </div>
+    @endif
+</div>
