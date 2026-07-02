@@ -56,6 +56,7 @@ class TransaksiController extends Controller
         $request->validate([
             'status' => 'required|integer|in:1,2,3,4,5,6,7,8',
             'pesan_penolakan' => 'nullable|string|max:1000',
+            'pesan_batal' => 'nullable|string|max:1000',
         ]);
 
         // ✅ Cari berdasarkan id_trx (bukan id)
@@ -83,13 +84,22 @@ class TransaksiController extends Controller
         } 
         elseif ($newStatus == 8) { // Dibatalkan
             $transaksi->deleted_at = now(); // Soft delete
+            if ($request->filled('pesan_batal')) {
+                $transaksi->pesan = $request->pesan_batal;
+            }
         }
 
         $transaksi->save(); // ✅ Ini akan memicu observer → simpan log
 
-        // Kirim Notifikasi WA jika status adalah Proses (3), Selesai (4), atau Ditolak (5)
-        if (in_array($newStatus, [3, 4, 5])) {
-            $this->sendStatusNotification($transaksi, $newStatus, $request->pesan_penolakan ?: $transaksi->pesan);
+        // Kirim Notifikasi WA jika status adalah Proses (3), Selesai (4), Ditolak (5), atau Dibatalkan (8)
+        if (in_array($newStatus, [3, 4, 5, 8])) {
+            $reason = null;
+            if ($newStatus == 5) {
+                $reason = $request->pesan_penolakan ?: $transaksi->pesan;
+            } elseif ($newStatus == 8) {
+                $reason = $request->pesan_batal ?: $transaksi->pesan;
+            }
+            $this->sendStatusNotification($transaksi, $newStatus, $reason);
         }
 
         return redirect()->back()->with('success', 'Status berhasil diperbarui.');
@@ -117,11 +127,17 @@ class TransaksiController extends Controller
 
         $message = '';
         if ($status == 3) {
-            $message = "Halo *{$transaksi->nama}*,\n\nPermohonan layanan *{$namaDokumen}* Anda dengan ID Transaksi *{$idTrx}* saat ini sedang **DIPROSES** oleh petugas.\n\nSilakan pantau secara berkala status permohonan Anda melalui aplikasi.\n\nTerima kasih.";
+            $message = "Halo *{$transaksi->nama}*,\n\nPermohonan layanan *{$namaDokumen}* Anda dengan ID Transaksi *{$idTrx}* saat ini sedang **DIPROSES** oleh petugas.\n\nSilakan pantau secara berkala status permohonan Anda melalui aplikasi.\nStatus **DIPROSES** dilakukan sesuai jam kerja Aktif, diluar jam kerja akan dikerjakan hari selanjutnya.\n\nTerima kasih.";
         } elseif ($status == 4) {
-            $message = "Halo *{$transaksi->nama}*,\n\nPermohonan layanan *{$namaDokumen}* Anda dengan ID Transaksi *{$idTrx}* telah **SELESAI**.\n\nDokumen Anda sudah siap diambil/diterima.\n\nTerima kasih.";
+            $message = "Halo *{$transaksi->nama}*,\n\nPermohonan layanan *{$namaDokumen}* Anda dengan ID Transaksi *{$idTrx}* telah **SELESAI**.\n\nDokumen Anda sudah siap diambil/diterima.\nSilakan cek menu lacak, cek berkas di aplikasi.";
+            if (!empty($reason)) {
+                $message .= "\n\n*Pesan Petugas:*\n{$reason}";
+            }
+            $message .= "\n\nTerima kasih.";
         } elseif ($status == 5) {
-            $message = "Halo *{$transaksi->nama}*,\n\nMohon maaf, permohonan layanan *{$namaDokumen}* Anda dengan ID Transaksi *{$idTrx}* statusnya **DITOLAK**.\n\n*Alasan Penolakan:*\n{$reason}\n\nSilakan lakukan perbaikan data atau pengajuan ulang melalui aplikasi.\n\nTerima kasih.";
+            $message = "Halo *{$transaksi->nama}*,\n\nMohon maaf, permohonan layanan *{$namaDokumen}* Anda dengan ID Transaksi *{$idTrx}* statusnya **DITOLAK**.\n\n*Alasan Penolakan:*\n{$reason}\n\nSilakan lakukan perbaikan data dan lakukan pengajuan ulang dengan nomor transaksi *{$idTrx}* melalui aplikasi.\n\nTerima kasih.";
+        } elseif ($status == 8) {
+            $message = "Halo *{$transaksi->nama}*,\n\nMohon maaf, permohonan layanan *{$namaDokumen}* Anda dengan ID Transaksi *{$idTrx}* telah **DIBATALKAN**.\n\n*Alasan Pembatalan:*\n{$reason}\n\nTerima kasih.";
         }
 
         if (empty($message)) {

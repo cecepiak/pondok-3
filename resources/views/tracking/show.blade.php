@@ -363,64 +363,69 @@
 <!-- Modal Nilai Kami -->
 <div id="nilai-modal" class="fixed inset-0 z-50 hidden overflow-y-auto" aria-labelledby="modal-title" role="dialog" aria-modal="true">
     <div class="flex items-center justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">
-        <div class="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity" aria-hidden="true"></div>
+        <div class="fixed inset-0 bg-gray-900 bg-opacity-60 backdrop-blur-sm transition-opacity" aria-hidden="true"></div>
         <span class="hidden sm:inline-block sm:align-middle sm:h-screen" aria-hidden="true">&#8203;</span>
-        <div class="inline-block align-bottom bg-white rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-lg sm:w-full">
-            <div class="bg-white px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
-                <div class="sm:flex sm:items-start">
-                    <div class="mx-auto flex-shrink-0 flex items-center justify-center h-12 w-12 rounded-full bg-blue-100 sm:mx-0 sm:h-10 sm:w-10">
-                        <svg class="h-6 w-6 text-blue-600" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path stroke="currentColor" stroke-width="2" d="M11.083 5.104c.35-.8 1.485-.8 1.834 0l1.752 4.022a1 1 0 0 0 .84.597l4.463.342c.9.069 1.255 1.2.556 1.771l-3.33 2.723a1 1 0 0 0-.337 1.016l1.03 4.119c.214.858-.71 1.552-1.474 1.106l-3.913-2.281a1 1 0 0 0-1.008 0L7.583 20.8c-.764.446-1.688-.248-1.474-1.106l1.03-4.119A1 1 0 0 0 6.8 14.56l-3.33-2.723c-.698-.571-.342-1.702.557-1.771l4.462-.342a1 1 0 0 0 .84-.597l1.753-4.022Z"/>
+        <div class="inline-block align-bottom bg-white rounded-3xl text-left overflow-hidden shadow-2xl transform transition-all sm:my-8 sm:align-middle sm:max-w-md sm:w-full border border-gray-100">
+            <div class="bg-white px-6 pt-6 pb-4 sm:p-8">
+                <div class="flex flex-col items-center text-center">
+                    <!-- Icon Header with Gradient -->
+                    <div class="flex items-center justify-center h-16 w-16 rounded-full bg-gradient-to-tr from-blue-50 to-indigo-50 text-blue-600 mb-4 shadow-inner transform transition-all duration-300 hover:rotate-12">
+                        <svg class="h-8 w-8 text-blue-600 filter drop-shadow-sm" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11.083 5.104c.35-.8 1.485-.8 1.834 0l1.752 4.022a1 1 0 0 0 .84.597l4.463.342c.9.069 1.255 1.2.556 1.771l-3.33 2.723a1 1 0 0 0-.337 1.016l1.03 4.119c.214.858-.71 1.552-1.474 1.106l-3.913-2.281a1 1 0 0 0-1.008 0L7.583 20.8c-.764.446-1.688-.248-1.474-1.106l1.03-4.119A1 1 0 0 0 6.8 14.56l-3.33-2.723c-.698-.571-.342-1.702.557-1.771l4.462-.342a1 1 0 0 0 .84-.597l1.753-4.022Z"/>
                         </svg>
                     </div>
-                    <div class="mt-3 text-center sm:mt-0 sm:ml-4 sm:text-left">
-                        <h3 class="text-lg leading-6 font-medium text-gray-900" id="modal-title">
-                            Nilai Kami
-                        </h3>
-                        <div class="mt-2">
-                            <p class="text-sm text-gray-500">
-                                Bagaimana pengalaman Anda dengan layanan kami?
-                            </p>
+                    <h3 class="text-2xl font-bold text-gray-800 tracking-tight" id="modal-title">
+                        Nilai Layanan Kami
+                    </h3>
+                    <p class="text-sm text-gray-500 mt-1 max-w-xs">
+                        Kepuasan Anda adalah prioritas kami. Berikan penilaian Anda untuk layanan ini.
+                    </p>
+                    
+                    <!-- Rating Stars Container -->
+                    <div class="mt-6 w-full">
+                        <div class="flex justify-center space-x-3 mb-2" id="star-rating-container">
+                            <label class="cursor-pointer group">
+                                <input type="radio" name="rating" value="1" class="sr-only">
+                                <span class="star text-gray-300 text-4xl md:text-5xl transition-all duration-150 inline-block transform group-hover:scale-125 select-none">★</span>
+                            </label>
+                            <label class="cursor-pointer group">
+                                <input type="radio" name="rating" value="2" class="sr-only">
+                                <span class="star text-gray-300 text-4xl md:text-5xl transition-all duration-150 inline-block transform group-hover:scale-125 select-none">★</span>
+                            </label>
+                            <label class="cursor-pointer group">
+                                <input type="radio" name="rating" value="3" class="sr-only">
+                                <span class="star text-gray-300 text-4xl md:text-5xl transition-all duration-150 inline-block transform group-hover:scale-125 select-none">★</span>
+                            </label>
+                            <label class="cursor-pointer group">
+                                <input type="radio" name="rating" value="4" class="sr-only">
+                                <span class="star text-gray-300 text-4xl md:text-5xl transition-all duration-150 inline-block transform group-hover:scale-125 select-none">★</span>
+                            </label>
+                            <label class="cursor-pointer group">
+                                <input type="radio" name="rating" value="5" class="sr-only">
+                                <span class="star text-gray-300 text-4xl md:text-5xl transition-all duration-150 inline-block transform group-hover:scale-125 select-none">★</span>
+                            </label>
                         </div>
-                        <!-- Rating Stars -->
-                        <div class="mt-4">
-                            <div class="flex justify-center space-x-2 mb-3">
-                                <label class="cursor-pointer">
-                                    <input type="radio" name="rating" value="1" class="sr-only">
-                                    <span class="star text-gray-300 text-3xl">★</span>
-                                </label>
-                                <label class="cursor-pointer">
-                                    <input type="radio" name="rating" value="2" class="sr-only">
-                                    <span class="star text-gray-300 text-3xl">★</span>
-                                </label>
-                                <label class="cursor-pointer">
-                                    <input type="radio" name="rating" value="3" class="sr-only">
-                                    <span class="star text-gray-300 text-3xl">★</span>
-                                </label>
-                                <label class="cursor-pointer">
-                                    <input type="radio" name="rating" value="4" class="sr-only">
-                                    <span class="star text-gray-300 text-3xl">★</span>
-                                </label>
-                            </div>
-                            <!-- Teks Deskripsi Dinamis -->
-                            <div id="rating-label" class="text-center text-sm text-gray-500 mt-2">
-                                Pilih tingkat kepuasan Anda
-                            </div>
+                        <!-- Teks Deskripsi Dinamis -->
+                        <div id="rating-label" class="inline-block px-3 py-1 bg-gray-50 text-gray-400 text-xs font-semibold rounded-full border border-gray-100 transition-all duration-200">
+                            Pilih tingkat kepuasan Anda
                         </div>
-                        <!-- Komentar Opsional -->
-                        <div class="mt-4">
-                            <label for="comment" class="block text-sm font-medium text-gray-700">Komentar (opsional)</label>
-                            <textarea id="comment" rows="3" class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm" placeholder="Berikan saran atau masukan..."></textarea>
-                        </div>
+                    </div>
+
+                    <!-- Komentar Opsional -->
+                    <div class="mt-6 w-full text-left">
+                        <label for="comment" class="block text-sm font-semibold text-gray-700 mb-1">Komentar / Masukan (opsional)</label>
+                        <textarea id="comment" rows="3" class="mt-1 block w-full border border-gray-200 rounded-2xl shadow-sm py-3 px-4 focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 text-sm transition-all duration-200" placeholder="Ceritakan pengalaman Anda atau berikan saran..."></textarea>
                     </div>
                 </div>
             </div>
-            <div class="bg-gray-50 px-4 py-3 sm:px-6 sm:flex sm:flex-row-reverse">
-                <button type="button" id="nilai-submit" class="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-blue-600 text-base font-medium text-white hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 sm:ml-3 sm:w-auto sm:text-sm">
-                    Kirim
-                </button>
-                <button type="button" id="nilai-cancel" class="mt-3 w-full inline-flex justify-center rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-base font-medium text-gray-700 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 sm:mt-0 sm:ml-3 sm:w-auto sm:text-sm">
+            
+            <!-- Modal Footer Buttons -->
+            <div class="bg-gray-50/50 px-6 py-4 sm:px-8 flex flex-col-reverse sm:flex-row sm:justify-end gap-2 border-t border-gray-100/50 rounded-b-3xl">
+                <button type="button" id="nilai-cancel" class="w-full sm:w-auto inline-flex justify-center items-center rounded-xl border border-gray-200 bg-white px-5 py-2.5 text-sm font-semibold text-gray-600 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-200 transition-all duration-200">
                     Batal
+                </button>
+                <button type="button" id="nilai-submit" class="w-full sm:w-auto inline-flex justify-center items-center rounded-xl border border-transparent bg-gradient-to-r from-blue-600 to-indigo-600 px-6 py-2.5 text-sm font-semibold text-white hover:from-blue-700 hover:to-indigo-700 shadow-md hover:shadow-indigo-500/20 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-all duration-200 transform active:scale-95">
+                    Kirim Penilaian
                 </button>
             </div>
         </div>
@@ -436,29 +441,53 @@ document.addEventListener('DOMContentLoaded', function() {
     const cekBerkasModal = document.getElementById('cek-berkas-modal');
     const cekBerkasCancel = document.getElementById('cek-berkas-cancel');
     const downloadBerkasButton = document.getElementById('download-berkas-button');
+    window.autoDownloadAfterRating = false;
+    window.hasUserRated = @json($transaksi->rating ? true : false);
+
+    window.triggerDownload = function() {
+        const userDokumen = @json($transaksi->userDokumen);
+        if (userDokumen.length > 0) {
+            userDokumen.forEach((dokumen, index) => {
+                setTimeout(() => {
+                    const link = document.createElement('a');
+                    link.href = "{{ url('/dokumen') }}/" + dokumen.file_path + "?download=1";
+                    link.download = dokumen.file_path.split('/').pop();
+                    document.body.appendChild(link);
+                    link.click();
+                    document.body.removeChild(link);
+                }, index * 250); // delay download slightly to avoid browser blocking multiple downloads
+            });
+        } else {
+            Swal.fire({
+                icon: 'info',
+                title: 'Tidak Ada Berkas',
+                text: 'Belum ada berkas hasil proses untuk diunduh.',
+                confirmButtonText: 'Tutup'
+            });
+        }
+    }
 
     if (downloadBerkasButton) {
         downloadBerkasButton.addEventListener('click', () => {
-            const userDokumen = @json($transaksi->userDokumen);
-            if (userDokumen.length > 0) {
-                userDokumen.forEach((dokumen, index) => {
-                    setTimeout(() => {
-                        const link = document.createElement('a');
-                        link.href = "{{ url('/dokumen') }}/" + dokumen.file_path + "?download=1";
-                        link.download = dokumen.file_path.split('/').pop();
-                        document.body.appendChild(link);
-                        link.click();
-                        document.body.removeChild(link);
-                    }, index * 250); // delay download slightly to avoid browser blocking multiple downloads
-                });
-            } else {
+            if (!window.hasUserRated) {
                 Swal.fire({
+                    title: 'Beri Penilaian Terlebih Dahulu',
+                    text: 'Silakan berikan penilaian layanan kami sebelum mengunduh berkas.',
                     icon: 'info',
-                    title: 'Tidak Ada Berkas',
-                    text: 'Belum ada berkas hasil proses untuk diunduh.',
-                    confirmButtonText: 'Tutup'
+                    showCancelButton: true,
+                    confirmButtonText: 'Beri Penilaian ⭐',
+                    cancelButtonText: 'Batal',
+                    confirmButtonColor: '#3b82f6',
+                    cancelButtonColor: '#6b7280',
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        window.autoDownloadAfterRating = true;
+                        bukaRatingModal();
+                    }
                 });
+                return;
             }
+            triggerDownload();
         });
     }
 
@@ -797,35 +826,57 @@ document.addEventListener('DOMContentLoaded', function() {
     const commentInput = document.getElementById('comment');
     const ratingLabel = document.getElementById('rating-label');
 
-    // Fungsi update tampilan bintang dan label
-    function updateRatingDisplay() {
-        const selected = document.querySelector('input[name="rating"]:checked');
-        const stars = document.querySelectorAll('.star');
+    const stars = document.querySelectorAll('.star');
+
+    function highlightStars(count) {
         stars.forEach((star, index) => {
-            if (selected && index < parseInt(selected.value)) {
+            if (index < count) {
                 star.classList.remove('text-gray-300');
-                star.classList.add('text-yellow-500');
+                star.classList.add('text-yellow-400', 'scale-110');
             } else {
-                star.classList.remove('text-yellow-500');
+                star.classList.remove('text-yellow-400', 'scale-110');
                 star.classList.add('text-gray-300');
             }
         });
+    }
+
+    // Fungsi update tampilan bintang dan label
+    function updateRatingDisplay() {
+        const selected = document.querySelector('input[name="rating"]:checked');
         if (selected) {
             const ratingValue = parseInt(selected.value);
+            highlightStars(ratingValue);
+            
             let labelText = '';
+            let labelClass = '';
             switch(ratingValue) {
-                case 1: labelText = 'Jelek'; break;
-                case 2: labelText = 'Cukup'; break;
-                case 3: labelText = 'Baik'; break;
-                case 4: labelText = 'Baik Sekali'; break;
+                case 1: 
+                    labelText = 'Sangat Kurang 😞'; 
+                    labelClass = 'text-red-600 border-red-100 bg-red-50';
+                    break;
+                case 2: 
+                    labelText = 'Kurang 😕'; 
+                    labelClass = 'text-orange-500 border-orange-100 bg-orange-50';
+                    break;
+                case 3: 
+                    labelText = 'Cukup 😐'; 
+                    labelClass = 'text-yellow-600 border-yellow-100 bg-yellow-50';
+                    break;
+                case 4: 
+                    labelText = 'Baik 🙂'; 
+                    labelClass = 'text-blue-600 border-blue-100 bg-blue-50';
+                    break;
+                case 5: 
+                    labelText = 'Sangat Baik! 😀'; 
+                    labelClass = 'text-green-600 border-green-100 bg-green-50';
+                    break;
             }
             ratingLabel.textContent = labelText;
-            ratingLabel.classList.remove('text-gray-500');
-            ratingLabel.classList.add('text-gray-800', 'font-medium');
+            ratingLabel.className = `inline-block px-3 py-1 font-semibold rounded-full border transition-all duration-200 ${labelClass}`;
         } else {
+            highlightStars(0);
             ratingLabel.textContent = 'Pilih tingkat kepuasan Anda';
-            ratingLabel.classList.remove('text-gray-800', 'font-medium');
-            ratingLabel.classList.add('text-gray-500');
+            ratingLabel.className = 'inline-block px-3 py-1 bg-gray-50 text-gray-400 text-xs font-semibold rounded-full border border-gray-100 transition-all duration-200';
         }
     }
 
@@ -837,12 +888,31 @@ document.addEventListener('DOMContentLoaded', function() {
         input.addEventListener('change', updateRatingDisplay);
     });
 
-    if (nilaiButton && nilaiModal) {
-        nilaiButton.addEventListener('click', () => {
+    stars.forEach((star, index) => {
+        star.addEventListener('mouseenter', () => {
+            highlightStars(index + 1);
+        });
+        star.addEventListener('mouseleave', () => {
+            const selected = document.querySelector('input[name="rating"]:checked');
+            if (selected) {
+                highlightStars(parseInt(selected.value));
+            } else {
+                highlightStars(0);
+            }
+        });
+    });
+
+    window.bukaRatingModal = function() {
+        if (nilaiModal) {
             nilaiModal.classList.remove('hidden');
-            // Reset saat modal dibuka
             ratingInputs.forEach(radio => radio.checked = false);
             updateRatingDisplay();
+        }
+    };
+
+    if (nilaiButton && nilaiModal) {
+        nilaiButton.addEventListener('click', () => {
+            bukaRatingModal();
         });
     }
 
@@ -852,6 +922,7 @@ document.addEventListener('DOMContentLoaded', function() {
             ratingInputs.forEach(radio => radio.checked = false);
             updateRatingDisplay();
             if (commentInput) commentInput.value = '';
+            window.autoDownloadAfterRating = false; // Reset flag if cancelled
         });
     }
 
@@ -892,13 +963,22 @@ document.addEventListener('DOMContentLoaded', function() {
             .then(response => response.json())
             .then(data => {
                 if (data.success) {
+                    window.hasUserRated = true; // Update local state immediately
+                    const ratingBtn = document.getElementById('nilai-button');
+                    if (ratingBtn) {
+                        ratingBtn.remove(); // Remove the rating button since they just rated
+                    }
+                    
                     Swal.fire({
                         icon: 'success',
                         title: 'Terima Kasih!',
                         text: 'Penilaian Anda telah kami terima. Kami sangat menghargai masukan Anda!',
                         confirmButtonText: 'OK'
                     }).then(() => {
-                        window.location.reload();
+                        if (window.autoDownloadAfterRating) {
+                            window.triggerDownload();
+                            window.autoDownloadAfterRating = false; // Reset flag
+                        }
                     });
                 } else {
                     Swal.fire({

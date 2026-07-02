@@ -215,7 +215,7 @@
                                 <td>{{ $transaksi->pengambilan->nama ?? '-' }}</td>
                             </tr>
                             <tr>
-                                <td><strong>Pesan Penolakan/Pembatalan</strong></td>
+                                <td><strong>Pesan Petugas</strong></td>
                                 <td>:</td>
                                 <td>{{ $transaksi->pesan ?? '-' }}</td>
                             </tr>
@@ -283,6 +283,7 @@
                                 <img src="{{ Storage::url($file->file) }}" 
                                     alt="Dokumen" 
                                     class="img-fluid w-100"
+                                    loading="lazy"
                                     onerror="this.src='data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxNTAiIGhlaWdodD0iMTUwIiB2aWV3Qm94PSIwIDAgMTUwIDE1MCI+PHJlY3Qgd2lkdGg9IjE1MCIgaGVpZ2h0PSIxNTAiIGZpbGw9IiM3NzciLz48dGV4dCB4PSI3NSIgeT0iODAiIGZvbnQtZmFtaWx5PSJBcmlhbCIgZm9udC1zaXplPSIzMCIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZmlsbD0iIzAwMCI+PC90ZXh0Pjwvc3ZnPg=='"
                                     style="height: 150px; object-fit: contain; object-position: center; border-radius: 4px;">
                             </a>
@@ -317,6 +318,7 @@
                                 <img src="{{ Storage::url($file->file) }}" 
                                     alt="{{ $labelInfo }}" 
                                     class="img-fluid w-100"
+                                    loading="lazy"
                                     onerror="this.src='data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxNTAiIGhlaWdodD0iMTUwIiB2aWV3Qm94PSIwIDAgMTUwIDE1MCI+PHJlY3Qgd2lkdGg9IjE1MCIgaGVpZ2h0PSIxNTAiIGZpbGw9IiM3NzciLz48dGV4dCB4PSI3NSIgeT0iODAiIGZvbnQtZmFtaWx5PSJBcmlhbCIgZm9udC1zaXplPSIzMCIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZmlsbD0iIzAwMCI+PC90ZXh0Pjwvc3ZnPg=='"
                                     style="height: 150px; object-fit: contain; object-position: center; border-radius: 4px;">
                             </a>
@@ -366,6 +368,12 @@
                         <div class="form-group mt-3" id="pesan-batal-container" style="display: none;">
                             <label for="pesan_batal">Pesan Pembatalan <span class="text-danger">*</span></label>
                             <textarea name="pesan_batal" id="pesan_batal" class="form-control" rows="4" placeholder="Jelaskan alasan pembatalan kepada pemohon..."></textarea>
+                            <small class="text-muted">Pesan ini akan dikirim ke pemohon.</small>
+                        </div>
+
+                        <div class="form-group mt-3" id="pesan-selesai-container" style="display: none;">
+                            <label for="pesan_selesai">Pesan Selesai (Opsional)</label>
+                            <textarea name="pesan_selesai" id="pesan_selesai" class="form-control" rows="4" placeholder="Masukkan pesan tambahan untuk pemohon jika diperlukan (opsional)..."></textarea>
                             <small class="text-muted">Pesan ini akan dikirim ke pemohon.</small>
                         </div>
 
@@ -530,6 +538,7 @@
         const statusSelect = document.getElementById('status');
         const penolakanContainer = document.getElementById('pesan-penolakan-container');
         const batalContainer = document.getElementById('pesan-batal-container');
+        const selesaiContainer = document.getElementById('pesan-selesai-container');
         const komplainAlert = document.getElementById('komplain-alert'); // ← ID baru
 
         if (!statusSelect) return;
@@ -544,6 +553,10 @@
 
             if (batalContainer) {
                 batalContainer.style.display = (selectedValue === '8') ? 'block' : 'none';
+            }
+
+            if (selesaiContainer) {
+                selesaiContainer.style.display = (selectedValue === '4') ? 'block' : 'none';
             }
 
             // Toggle alert komplain (status 7)

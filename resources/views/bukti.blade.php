@@ -178,7 +178,7 @@
                             @foreach($files as $file)
                                 <a href="{{ Storage::url($file->file) }}" target="_blank" class="block bg-white border border-gray-200 rounded-lg overflow-hidden hover:border-blue-400 hover:shadow-md transition group">
                                     @if (in_array(pathinfo($file->file, PATHINFO_EXTENSION), ['jpg', 'jpeg', 'png', 'gif', 'webp']))
-                                        <img src="{{ Storage::url($file->file) }}" alt="Dokumen" class="w-full h-24 object-cover group-hover:scale-105 transition-transform duration-200">
+                                        <img src="{{ Storage::url($file->file) }}" alt="Dokumen" loading="lazy" class="w-full h-24 object-cover group-hover:scale-105 transition-transform duration-200">
                                     @else
                                         <div class="bg-blue-50 h-24 flex items-center justify-center">
                                             <svg class="w-10 h-10 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -220,7 +220,7 @@
                         </h5>
                         @if($transaksi->has_selfie)
                             <div class="border rounded-lg overflow-hidden bg-gray-100 flex items-center justify-center">
-                                <img src="{{ $transaksi->selfie_url }}" alt="Selfie" class="w-full h-48 object-cover">
+                                <img src="{{ $transaksi->selfie_url }}" alt="Selfie" loading="lazy" class="w-full h-48 object-cover">
                             </div>
                         @else
                             <p class="text-gray-500 italic text-sm text-center py-8">Tidak ada selfie</p>
@@ -237,7 +237,7 @@
                         </h5>
                         @if($transaksi->has_signature)
                             <div class="border rounded-lg overflow-hidden bg-gray-50 p-4 flex items-center justify-center h-48">
-                                <img src="{{ $transaksi->signature_url }}" alt="Tanda Tangan" class="max-h-36 mx-auto">
+                                <img src="{{ $transaksi->signature_url }}" alt="Tanda Tangan" loading="lazy" class="max-h-36 mx-auto">
                             </div>
                         @else
                             <p class="text-gray-500 italic text-sm text-center py-8">Tidak ada tanda tangan</p>

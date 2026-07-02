@@ -197,6 +197,7 @@
                                         <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M12 4v16m8-8H4" stroke-width="2" stroke-linecap="round" /></svg>
                                     </div>
                                     <p class="text-xs text-gray-500">Seret & Jatuhkan berkas atau <span class="text-blue-600 font-bold">Jelajahi</span></p>
+                                    <p class="text-[10px] text-gray-400 mt-1">Format: JPG, JPEG, PNG (Maks. 2MB per file)</p>
                                 </div>
                             </div>
                             <div class="flex flex-wrap gap-3">
@@ -510,6 +511,9 @@ document.addEventListener('alpine:init', () => {
                     @php
                         $raw = $transaksi->id_dokumen;
                         $ids = is_array($raw) ? $raw : json_decode($raw, true);
+                        if (!is_array($ids)) {
+                            $ids = ($ids !== null && $ids !== '') ? [$ids] : [];
+                        }
                         // Cast ke string agar konsisten dengan :value="String(item.id)" di checkbox
                         $ids = array_map('strval', $ids);
                     @endphp
@@ -742,7 +746,22 @@ document.addEventListener('alpine:init', () => {
                 body: formData,
                 headers: { 'X-CSRF-TOKEN': '{{ csrf_token() }}', 'Accept': 'application/json' }
             })
-            .then(response => response.json())
+            .then(response => {
+                if (!response.ok) {
+                    if (response.status === 413) {
+                        throw new Error('Ukuran file/data yang dikirim terlalu besar. Silakan kurangi ukuran file Anda.');
+                    }
+                    if (response.status === 419) {
+                        throw new Error('Sesi halaman telah kedaluwarsa (CSRF token expired). Silakan muat ulang halaman ini.');
+                    }
+                    return response.json().then(errData => {
+                        throw new Error(errData.message || 'Terjadi kesalahan pada server.');
+                    }).catch(() => {
+                        throw new Error(`Terjadi kesalahan server (Status: ${response.status}).`);
+                    });
+                }
+                return response.json();
+            })
             .then(data => {
                 btn.disabled = false;
                 btn.innerHTML = originalText;
@@ -765,7 +784,7 @@ document.addEventListener('alpine:init', () => {
             .catch(error => {
                 btn.disabled = false;
                 btn.innerHTML = originalText;
-                Swal.fire({ icon: 'error', title: 'Error', text: 'Gagal mengirim data. Cek koneksi internet.' });
+                Swal.fire({ icon: 'error', title: 'Error', text: error.message || 'Gagal mengirim data. Cek koneksi internet.' });
                 console.error('Error:', error);
             });
         }

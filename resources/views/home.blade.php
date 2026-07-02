@@ -55,30 +55,20 @@
     </section>
 
     <section class="mt-4">
-        <div class="grid grid-cols-2 lg:grid-cols-3 gap-4">
+        <div class="grid grid-cols-2 gap-4">
             {{-- Layanan Online --}}
             <a href="/form_pengajuan" class="animate-bounce-up bg-white/70 rounded-lg shadow-xl overflow-hidden flex flex-col items-center justify-center p-4 transform transition duration-300 hover:scale-105 hover:bg-blue-50">
                 <img src="{{ asset('icon/online2.png') }}" alt="Layanan Online" class="w-20 h-20 mb-2">
                 <p class="font-bold text-black-500 mt-1 text-center">Layanan Online</p>
-                    <p class="text-gray-500 text-sm mb-1 text-center">Pengajuan Dokumen Administrasi Kependudukan</p>
+                <p class="text-gray-500 text-sm mb-1 text-center">Pengajuan Permohonan</p>
             </a>
-
-            {{-- Agregat --}}
-            <a href="https://petaku.dukcapil.tapinkab.go.id/agregat-kependudukan" target="_blank" class="animate-bounce-up bg-white/70 rounded-lg shadow-xl overflow-hidden flex flex-col items-center justify-center p-4 transform transition duration-300 hover:scale-105 hover:bg-blue-50">
-                <img src="{{ asset('icon/formulir-1.png') }}" alt="SP" class="w-20 h-20 mb-2">
-                <p class="font-bold text-black-500 mt-1 text-center">Agregat Kependudukan</p>
-                <p class="text-gray-500 text-sm mb-1 text-center">Informasi Data Kependudukan Kabupaten Tapin</p>
-            </a>
-            
 
             {{-- SKM --}}
-            <div class="col-span-2 lg:col-span-1 flex justify-center">
-                <a href="https://survei.dukcapil.tapinkab.go.id/survei-kepuasan-masyarakat" target="_blank" class="w-full lg:w-full max-w-[calc(50%-0.5rem)] lg:max-w-none animate-bounce-up bg-white/70 rounded-lg shadow-xl overflow-hidden flex flex-col items-center justify-center p-4 transform transition duration-300 hover:scale-105 hover:bg-blue-50">
-                    <img src="{{ asset('icon/konsultasi.png') }}" alt="SP" class="w-20 h-20 mb-2">
-                    <p class="font-bold text-black-500 mt-1 text-center">SKM</p>
-                    <p class="text-gray-500 text-sm mb-1 text-center">Survey kepuasan masyarakat guna meningkatkan kualitas pelayanan Disdukcapil Tapin</p>
-                </a>
-            </div>
+            <a href="https://skm.go.id/share/instansi/98445cc2-e8f5-445f-b27d-036005f06e3d/1" target="_blank" class="animate-bounce-up bg-white/70 rounded-lg shadow-xl overflow-hidden flex flex-col items-center justify-center p-4 transform transition duration-300 hover:scale-105 hover:bg-blue-50">
+                <img src="{{ asset('icon/konsultasi.png') }}" alt="SP" class="w-20 h-20 mb-2">
+                <p class="font-bold text-black-500 mt-1 text-center">SKM</p>
+                <p class="text-gray-500 text-sm mb-1 text-center">Survey Kepuasan Masyarakat</p>
+            </a>
         </div>
     </section>
     

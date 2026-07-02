@@ -91,6 +91,20 @@ class Transaksi extends Model
         return $this->belongsTo(SetupKel::class, 'id_kel', 'kode_desa');
     }
 
+    public function getDesaAttribute()
+    {
+        if ($this->relationLoaded('desa')) {
+            $loaded = $this->getRelation('desa');
+            if ($loaded && $loaded->kecamatan_id == $this->id_kec && $loaded->kode_desa == $this->id_kel) {
+                return $loaded;
+            }
+        }
+
+        return SetupKel::where('kode_desa', $this->id_kel)
+                       ->where('kecamatan_id', $this->id_kec)
+                       ->first();
+    }
+
     public function dokumen(): BelongsTo
     {
         return $this->belongsTo(JenisPelayanan::class, 'id_dokumen', 'id'); 

@@ -51,9 +51,11 @@
         <a href="{{ route('pesan.index') }}" class="flex flex-col items-center justify-center w-14 h-full transition-all duration-200 active:scale-90
             {{ request()->routeIs('pesan.index') ? 'text-blue-600' : 'text-gray-400 hover:text-gray-600' }}"
             aria-label="Pesan">
-            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.2" stroke="currentColor" class="w-6 h-6">
-                <path stroke-linecap="round" stroke-linejoin="round" d="M8.625 12a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Zm0 0H8.25m4.125 0a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Zm0 0H12m4.125 0a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Zm0 0h-.375M21 12c0 4.556-4.03 8.25-9 8.25a9.764 9.764 0 0 1-2.555-.337A5.972 5.972 0 0 1 5.41 20.97a.75.75 0 0 1-1.074-.765 5.99 5.99 0 0 1 1.523-3.64C4.29 15.11 3 12.813 3 12c0-4.556 4.03-8.25 9-8.25s9 3.694 9 8.25Z" />
-            </svg>
+            <div class="relative" id="chat-link-container">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.2" stroke="currentColor" class="w-6 h-6">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M8.625 12a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Zm0 0H8.25m4.125 0a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Zm0 0H12m4.125 0a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Zm0 0h-.375M21 12c0 4.556-4.03 8.25-9 8.25a9.764 9.764 0 0 1-2.555-.337A5.972 5.972 0 0 1 5.41 20.97a.75.75 0 0 1-1.074-.765 5.99 5.99 0 0 1 1.523-3.64C4.29 15.11 3 12.813 3 12c0-4.556 4.03-8.25 9-8.25s9 3.694 9 8.25Z" />
+                </svg>
+            </div>
             <span class="text-[10px] mt-1 font-bold tracking-wide">Pesan</span>
         </a>
 
@@ -68,3 +70,79 @@
         </a>
     </nav>
 </footer>
+
+@auth
+<span id="global-user-id" data-id="{{ Auth::id() }}" data-username="{{ Auth::user()->name }}" class="hidden"></span>
+
+<script src="https://cdn.socket.io/4.7.2/socket.io.min.js"></script>
+<script>
+    (function() {
+        const SOCKET_SERVER_URL = "{{ env('SOCKET_URL') }}";
+        const userEl = document.getElementById('global-user-id');
+        if (!userEl) return;
+
+        const userId = userEl.getAttribute('data-id');
+        const username = userEl.getAttribute('data-username');
+
+        // Connect socket
+        if (!window.globalUserSocket) {
+            window.globalUserSocket = io(SOCKET_SERVER_URL);
+            window.globalUserSocket.on('connect', () => {
+                window.globalUserSocket.emit('register', {
+                    id: userId,
+                    username: username,
+                    role: 'user'
+                });
+            });
+        }
+
+        async function updateClientUnreadBadge() {
+            try {
+                // Jika sedang berada di halaman chat, jangan tampilkan badge
+                if (window.location.pathname.includes('/pesan')) {
+                    const container = document.getElementById('chat-link-container');
+                    if (container) {
+                        const oldBadge = container.querySelector('.badge-chat-client');
+                        if (oldBadge) oldBadge.remove();
+                    }
+                    return;
+                }
+
+                const response = await fetch(`${SOCKET_SERVER_URL}/chat/messages/unread/user/${userId}`);
+                const data = await response.json();
+                const count = parseInt(data.count || 0);
+
+                const container = document.getElementById('chat-link-container');
+                if (container) {
+                    const oldBadge = container.querySelector('.badge-chat-client');
+                    if (oldBadge) oldBadge.remove();
+
+                    if (count > 0) {
+                        const badge = document.createElement('span');
+                        badge.className = 'badge-chat-client absolute -top-1.5 -right-2 bg-green-600 text-white text-[9px] font-black rounded-full min-w-[16px] h-4 px-1 flex items-center justify-center border-2 border-white shadow-sm z-10 animate-pulse';
+                        badge.textContent = count;
+                        container.appendChild(badge);
+                    }
+                }
+            } catch (error) {
+                console.error('Error fetching client unread count:', error);
+            }
+        }
+
+        // Run on load
+        document.addEventListener('DOMContentLoaded', () => {
+            updateClientUnreadBadge();
+        });
+
+        // Listen for new messages
+        window.globalUserSocket.on('newMessageFromAdmin', () => {
+            updateClientUnreadBadge();
+        });
+        
+        // Listen when messages are marked read
+        window.globalUserSocket.on('messagesRead', () => {
+            updateClientUnreadBadge();
+        });
+    })();
+</script>
+@endauth

@@ -103,6 +103,7 @@ Route::middleware(['auth'])->group(function () {
     Route::prefix('admin')->middleware([\App\Http\Middleware\AdminOperatorMiddleware::class])->group(function () {
     Route::get('/pesan', [PesanController::class, 'admin'])->name('admin.pesan.index');
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('admin.dashboard');
+    Route::get('/laporan', [App\Http\Controllers\Admin\LaporanController::class, 'index'])->name('admin.laporan.index');
     Route::get('/transaksi', [DashboardController::class, 'transaksiIndex'])->name('admin.transaksi.index');
     Route::get('/transaksi/{id_trx}', [DashboardController::class, 'show'])->name('admin.transaksi.show');
     Route::post('/transaksi/{id}/update-status', [DashboardController::class, 'updateStatus'])->name('admin.transaksi.update-status');

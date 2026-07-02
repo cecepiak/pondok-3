@@ -64,6 +64,20 @@ class User extends Authenticatable
         return $this->belongsTo(SetupKel::class, 'kode_desa', 'kode_desa');
     }
 
+    public function getDesaAttribute()
+    {
+        if ($this->relationLoaded('desa')) {
+            $loaded = $this->getRelation('desa');
+            if ($loaded && $loaded->kecamatan_id == $this->id_kec && $loaded->kode_desa == $this->kode_desa) {
+                return $loaded;
+            }
+        }
+
+        return SetupKel::where('kode_desa', $this->kode_desa)
+                       ->where('kecamatan_id', $this->id_kec)
+                       ->first();
+    }
+
     public function getLevelNameAttribute()
     {
         $levels = [

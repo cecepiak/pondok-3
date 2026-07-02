@@ -273,6 +273,9 @@ class DashboardController extends \App\Http\Controllers\Controller
         if ($request->status == 8) {
             $rules['pesan_batal'] = 'required|string|max:1000';
         }
+        if ($request->status == 4) {
+            $rules['pesan_selesai'] = 'nullable|string|max:1000';
+        }
 
         $request->validate($rules);
 
@@ -290,6 +293,7 @@ class DashboardController extends \App\Http\Controllers\Controller
             $transaksi->tgl_proses = now();
         } elseif ($newStatus == 4) { // Selesai
             $transaksi->tgl_selesai = now();
+            $transaksi->pesan = $request->pesan_selesai;
         } elseif ($newStatus == 5) { // Ditolak
             $transaksi->updated_at = now();
             $transaksi->pesan = $request->pesan_penolakan;
@@ -300,9 +304,17 @@ class DashboardController extends \App\Http\Controllers\Controller
 
         $transaksi->save();
 
-        // Kirim Notifikasi WA jika status adalah Proses (3), Selesai (4), atau Ditolak (5)
-        if (in_array($newStatus, [3, 4, 5])) {
-            $this->sendStatusNotification($transaksi, $newStatus, $request->pesan_penolakan);
+        // Kirim Notifikasi WA jika status adalah Proses (3), Selesai (4), Ditolak (5), atau Dibatalkan (8)
+        if (in_array($newStatus, [3, 4, 5, 8])) {
+            $reason = null;
+            if ($newStatus == 4) {
+                $reason = $request->pesan_selesai;
+            } elseif ($newStatus == 5) {
+                $reason = $request->pesan_penolakan;
+            } elseif ($newStatus == 8) {
+                $reason = $request->pesan_batal;
+            }
+            $this->sendStatusNotification($transaksi, $newStatus, $reason);
         }
 
         return redirect()->back()->with('success', 'Status berhasil diperbarui.');
@@ -330,11 +342,17 @@ class DashboardController extends \App\Http\Controllers\Controller
 
         $message = '';
         if ($status == 3) {
-            $message = "Halo *{$transaksi->nama}*,\n\nPermohonan layanan *{$namaDokumen}* Anda dengan ID Transaksi *{$idTrx}* saat ini sedang **DIPROSES** oleh petugas.\n\nSilakan pantau secara berkala status permohonan Anda melalui aplikasi.\n\nTerima kasih.";
+            $message = "Halo *{$transaksi->nama}*,\n\nPermohonan layanan *{$namaDokumen}* Anda dengan ID Transaksi *{$idTrx}* saat ini sedang **DIPROSES** oleh petugas.\n\nSilakan pantau secara berkala status permohonan Anda melalui aplikasi.\nStatus **DIPROSES** dilakukan sesuai jam kerja Aktif, diluar jam kerja akan dikerjakan hari selanjutnya.\n\nTerima kasih.";
         } elseif ($status == 4) {
-            $message = "Halo *{$transaksi->nama}*,\n\nPermohonan layanan *{$namaDokumen}* Anda dengan ID Transaksi *{$idTrx}* telah **SELESAI**.\n\nDokumen Anda sudah siap diambil/diterima.\n\nTerima kasih.";
+            $message = "Halo *{$transaksi->nama}*,\n\nPermohonan layanan *{$namaDokumen}* Anda dengan ID Transaksi *{$idTrx}* telah **SELESAI**.\n\nDokumen Anda sudah siap diambil/diterima.\nSilakan cek menu lacak, cek berkas di aplikasi.";
+            if (!empty($reason)) {
+                $message .= "\n\n*Pesan Petugas:*\n{$reason}";
+            }
+            $message .= "\n\nTerima kasih.";
         } elseif ($status == 5) {
-            $message = "Halo *{$transaksi->nama}*,\n\nMohon maaf, permohonan layanan *{$namaDokumen}* Anda dengan ID Transaksi *{$idTrx}* statusnya **DITOLAK**.\n\n*Alasan Penolakan:*\n{$reason}\n\nSilakan lakukan perbaikan data atau pengajuan ulang melalui aplikasi.\n\nTerima kasih.";
+            $message = "Halo *{$transaksi->nama}*,\n\nMohon maaf, permohonan layanan *{$namaDokumen}* Anda dengan ID Transaksi *{$idTrx}* statusnya **DITOLAK**.\n\n*Alasan Penolakan:*\n{$reason}\n\nSilakan lakukan perbaikan data dan lakukan pengajuan ulang dengan nomor transaksi *{$idTrx}* melalui aplikasi.\n\nTerima kasih.";
+        } elseif ($status == 8) {
+            $message = "Halo *{$transaksi->nama}*,\n\nMohon maaf, permohonan layanan *{$namaDokumen}* Anda dengan ID Transaksi *{$idTrx}* telah **DIBATALKAN**.\n\n*Alasan Pembatalan:*\n{$reason}\n\nTerima kasih.";
         }
 
         if (empty($message)) {

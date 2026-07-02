@@ -406,6 +406,13 @@ return [
         //     'url' => '#',
         // ],
 
+        [
+            'text' => 'Laporan',
+            'url'  => 'admin/laporan',
+            'icon' => 'fas fa-fw fa-chart-line',
+            'active' => ['admin/laporan*'],
+        ],
+
         ['header' => 'account_settings'],
         [
             'text' => 'profile',
